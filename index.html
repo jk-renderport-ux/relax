@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Relaxation</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+
+        color: white;
+        background: #111;
+        overflow-x: hidden;
+        line-height: 2;
+      }
+
+      /* =========================
+  FIX BG
+========================= */
+
+      .bg-wrap {
+        position: fixed;
+        inset: 0;
+        z-index: -10;
+        overflow: hidden;
+      }
+
+      .bg {
+        position: absolute;
+        inset: 0;
+
+        background-size: cover;
+        background-position: center;
+
+        opacity: 0;
+
+        transform: scale(1.08);
+
+        transition:
+          opacity 1.8s ease,
+          transform 7s ease;
+
+        will-change: opacity, transform;
+      }
+
+      .bg.active {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      /* dark overlay */
+
+      .bg-wrap::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+
+        background: rgba(0, 0, 0, 0.5);
+
+        z-index: 2;
+      }
+
+      /* =========================
+  SECTION
+========================= */
+
+      section {
+        min-height: 100vh;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        position: relative;
+
+        padding: 120px 8%;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+      }
+
+      /* =========================
+  GLASS
+========================= */
+
+      .glass {
+        border-radius: 32px;
+      }
+
+      /* =========================
+  HERO
+========================= */
+
+      .hero-inner {
+        text-align: center;
+      }
+
+      .hero-inner h1 {
+        font-size: clamp(3.5rem, 10vw, 7rem);
+
+        font-weight: 300;
+
+        letter-spacing: 0.16em;
+
+        margin-bottom: 30px;
+      }
+
+      .reserve-btn {
+        display: inline-flex;
+
+        padding: 16px 40px;
+
+        color: white;
+
+        border: 1px solid rgba(255, 255, 255, 0.5);
+
+        transition: 0.4s ease;
+
+        backdrop-filter: blur(8px);
+
+        text-decoration: none;
+
+        letter-spacing: 0.12em;
+      }
+
+      .reserve-btn:hover {
+        background: white;
+        color: #111;
+      }
+
+      /* =========================
+  STORY
+========================= */
+
+      .story-content {
+        padding: 70px 60px;
+
+        max-width: 900px;
+        margin: auto;
+      }
+
+      .story-content p {
+        margin-bottom: 34px;
+
+        font-size: clamp(1rem, 1.3vw, 1.12rem);
+
+        opacity: 0;
+
+        transform: translateY(40px);
+
+        transition: 1.2s ease;
+      }
+
+      .story-content p.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* =========================
+  TITLE
+========================= */
+
+      .section-title {
+        text-align: center;
+
+        font-size: clamp(2rem, 5vw, 4rem);
+
+        font-weight: 300;
+
+        margin-bottom: 80px;
+      }
+
+      /* =========================
+  CARD
+========================= */
+
+      .cards {
+        display: grid;
+
+        grid-template-columns: repeat(3, 1fr);
+
+        gap: 28px;
+
+        margin-bottom: 80px;
+      }
+
+      .card {
+        padding: 40px 32px;
+
+        opacity: 0;
+
+        transform: translateY(40px);
+
+        transition: 1.2s ease;
+      }
+
+      .card.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .card h3 {
+        font-size: 1.7rem;
+        margin-bottom: 24px;
+        font-weight: 400;
+      }
+
+      .card ul {
+        list-style: none;
+        margin-bottom: 24px;
+      }
+
+      .card li {
+        margin-bottom: 8px;
+        opacity: 0.8;
+      }
+
+      .card p {
+        font-size: 0.95rem;
+        opacity: 0.9;
+      }
+
+      /* =========================
+  PRICE
+========================= */
+
+      .price-grid {
+        display: grid;
+
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 28px;
+
+        margin-bottom: 80px;
+      }
+
+      .price-card {
+        padding: 50px 40px;
+
+        opacity: 0;
+
+        transform: translateY(40px);
+
+        transition: 1.2s ease;
+      }
+
+      .price-card.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .price-card h3 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        font-weight: 400;
+      }
+
+      .price {
+        margin-bottom: 24px;
+        opacity: 0.7;
+      }
+
+      /* =========================
+  BANNER
+========================= */
+
+      .reserve-banner {
+        text-align: center;
+
+        padding: 90px 40px;
+
+        opacity: 0;
+
+        transform: translateY(40px);
+
+        transition: 1.2s ease;
+      }
+
+      .reserve-banner.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .reserve-banner h2 {
+        font-size: clamp(2rem, 5vw, 4rem);
+
+        font-weight: 300;
+
+        margin-bottom: 20px;
+      }
+
+      .reserve-banner p {
+        margin-bottom: 30px;
+        opacity: 0.85;
+      }
+
+      /* =========================
+  Responsive
+========================= */
+
+      @media (max-width: 900px) {
+        section {
+          padding: 90px 6%;
+        }
+
+        .cards,
+        .price-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .story-content {
+          padding: 50px 28px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- =========================
+  FIX BG
+========================= -->
+
+    <div class="bg-wrap">
+      <div
+        class="bg active"
+        data-bg="hero"
+        style="background-image: url('suikei1.jpg');"
+      ></div>
+
+      <div
+        class="bg"
+        data-bg="story"
+        style="background-image: url('suikei2.jpg');"
+      ></div>
+
+      <div
+        class="bg"
+        data-bg="service"
+        style="background-image: url('suikei3.jpg');"
+      ></div>
+
+      <div
+        class="bg"
+        data-bg="reserve"
+        style="background-image: url('suikei4.jpg');"
+      ></div>
+    </div>
+
+    <!-- =========================
+  HERO
+========================= -->
+
+    <section data-section="hero">
+      <div class="hero-inner">
+        <h1>Relaxation</h1>
+
+        <a href="#" class="reserve-btn"> 予約する </a>
+      </div>
+    </section>
+
+    <!-- =========================
+  STORY
+========================= -->
+
+    <section data-section="story">
+      <div class="container">
+        <div class="story-content glass">
+          <p class="fade">
+            気づかないうちに、 心も身体も力が入っているあなたへ。
+          </p>
+
+          <p class="fade">
+            「最近、深く息ができていないな」 「寝ても疲れが残っている気がする」
+          </p>
+
+          <p class="fade">
+            そんなふうに感じたら、 少し休息が必要な時かもしれません。
+          </p>
+
+          <p class="fade">
+            今週末は、都会の喧騒を離れ、 森の静けさに身を委ねてみませんか？
+          </p>
+
+          <p class="fade">
+            木々のざわめき、 澄んだ空気、 木漏れ日の優しさ。
+            豊かな自然に包まれるうち、 張り詰めていた心と身体が、
+            ゆっくりとほどけていきます。
+          </p>
+
+          <p class="fade">
+            呼吸を深める「森林浴」。 身体をやさしくほぐしていく「ボディケア」。
+            そして、心地よく身体を温める「陶板浴」。
+          </p>
+
+          <p class="fade">
+            Render fikaだからこそ味わえる、 心と身体をリセットするための
+            リラクゼーション。
+          </p>
+
+          <p class="fade">
+            自然の力に包まれながら、 深く、ととのう時間を お過ごしください。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+  SERVICE
+========================= -->
+
+    <section data-section="service">
+      <div class="container">
+        <h2 class="section-title">Relaxation Menu</h2>
+
+        <!-- 3カラム -->
+
+        <div class="cards">
+          <div class="card glass fade">
+            <h3>温熱陶板浴</h3>
+
+            <ul>
+              <li>ボディケア</li>
+              <li>森林浴</li>
+            </ul>
+
+            <p>
+              陶板浴は、天然鉱石を使用した 陶板の上に横になり、
+              低温で身体をじんわりと温める温熱ケアです。
+            </p>
+          </div>
+
+          <div class="card glass fade">
+            <h3>森林浴</h3>
+
+            <ul>
+              <li>自然リラクゼーション</li>
+              <li>深呼吸</li>
+            </ul>
+
+            <p>
+              森の香りと静けさに包まれながら、 自然の中で深く呼吸をし、
+              心と身体をやさしく整えていきます。
+            </p>
+          </div>
+
+          <div class="card glass fade">
+            <h3>指圧整体</h3>
+
+            <ul>
+              <li>呼吸ほぐし整体</li>
+              <li>首・肩 / 背中 / 腰</li>
+              <li>ふくらはぎ / 足裏 / ヘッド</li>
+            </ul>
+
+            <p>
+              呼吸を活用したやさしい施術で、 身体の深部からゆるめ、
+              緊張をほどいていきます。
+            </p>
+          </div>
+        </div>
+
+        <!-- PRICE -->
+
+        <div class="price-grid">
+          <div class="price-card glass fade">
+            <h3>おひとりで</h3>
+
+            <div class="price">¥4,300 ~ /1名様利用</div>
+
+            <p>
+              陶板浴の上に横になったまま、
+              温まりながら施術を受けていただけます。
+            </p>
+          </div>
+
+          <div class="price-card glass fade">
+            <h3>おふたりで</h3>
+
+            <div class="price">¥9,600 ~ /2名様料金</div>
+
+            <p>大切な人と一緒に、 自然に包まれる癒しの時間を。</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================
+  RESERVE
+========================= -->
+
+    <section data-section="reserve">
+      <div class="container">
+        <div class="reserve-banner fade">
+          <h2>深く、呼吸する時間を。</h2>
+
+          <p>森に包まれるリラクゼーション体験を、 Render fikaで。</p>
+
+          <a href="#" class="reserve-btn"> ご予約はこちら </a>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      /* =========================
+  Fade Animation
+========================= */
+
+      const fades = document.querySelectorAll(".fade");
+
+      const fadeObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("show");
+            }
+          });
+        },
+        {
+          threshold: 0.15,
+        },
+      );
+
+      fades.forEach((el) => {
+        fadeObserver.observe(el);
+      });
+
+      /* =========================
+  BG Change
+========================= */
+
+      const sections = document.querySelectorAll("section");
+
+      const backgrounds = document.querySelectorAll(".bg");
+
+      const bgObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.dataset.section;
+
+              backgrounds.forEach((bg) => {
+                bg.classList.remove("active");
+
+                if (bg.dataset.bg === id) {
+                  bg.classList.add("active");
+                }
+              });
+            }
+          });
+        },
+        {
+          rootMargin: "-50% 0px -50% 0px",
+          threshold: 0,
+        },
+      );
+
+      sections.forEach((section) => {
+        bgObserver.observe(section);
+      });
+    </script>
+  </body>
+</html>
