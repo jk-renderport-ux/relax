@@ -39,25 +39,25 @@
 
       .bg {
         position: absolute;
-        inset: 0;
+
+        /* スクロールパララックスで縦にずらす分の余白 */
+        top: -40px;
+        bottom: -40px;
+        left: 0;
+        right: 0;
 
         background-size: cover;
         background-position: center;
 
         opacity: 0;
 
-        transform: scale(1.08);
-
-        transition:
-          opacity 1.8s ease,
-          transform 7s ease;
+        transition: opacity 1.8s ease;
 
         will-change: opacity, transform;
       }
 
       .bg.active {
         opacity: 1;
-        transform: scale(1);
       }
 
       /* dark overlay */
@@ -85,12 +85,26 @@
 
         position: relative;
 
-        padding: 120px 8%;
+        padding: 0px 8%;
       }
 
       .container {
         width: 100%;
         max-width: 1200px;
+      }
+      .container2 {
+        width: 100%;
+        margin-top: 50vh;
+        max-width: 1200px;
+      }
+      /* =========================
+  SPACER
+========================= */
+
+      .spacer {
+        min-height: 100vh;
+        padding: 0;
+        background: linear-gradient(90deg, #454e3c 0%, #343a2e 100%);
       }
 
       /* =========================
@@ -105,28 +119,116 @@
   HERO
 ========================= */
 
-      .hero-inner {
-        text-align: center;
+      .hero-story-wrap {
+        position: relative;
       }
 
-      .hero-inner h1 {
-        font-size: clamp(3.5rem, 10vw, 7rem);
+      .hero-bg-trigger {
+        min-height: 10vh;
+      }
+
+      .hero-inner {
+        position: sticky;
+        top: 48px;
+        z-index: 20;
+
+        margin-top: calc(200px);
+
+        text-align: center;
+
+        filter: blur(16px);
+
+        transition:
+          opacity 0.4s ease,
+          filter 0.8s ease;
+
+        will-change: opacity, filter;
+      }
+
+      .hero-inner.revealed {
+        filter: blur(0);
+      }
+
+      .hero-inner h2 {
+        font-size: clamp(2rem, 5vw, 4rem);
 
         font-weight: 300;
 
         letter-spacing: 0.16em;
 
-        margin-bottom: 30px;
+        margin-bottom: 15px;
+      }
+
+      /* Serviceに入ると「Relaxation」に「Menu」が追加される */
+
+      .menu-suffix {
+        display: inline-block;
+        padding-left: 5px;
+        max-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        vertical-align: bottom;
+
+        opacity: 0;
+        filter: blur(12px);
+
+        transition:
+          max-width 0.4s ease,
+          opacity 0.4s ease,
+          filter 0.4s ease;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+
+        padding: 6px 20px;
+
+        margin-bottom: 40px;
+
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 20px;
+
+        color: #2b2f22;
+        font-family: sans-serif;
+        font-size: 0.95rem;
+        letter-spacing: 0.05em;
+      }
+
+      .hero-badge svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+      }
+
+      .hero-badge .badge-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 26px;
+        height: 26px;
+
+        background: #ececec;
+        border-radius: 6px;
+
+        font-size: 0.85rem;
+        font-weight: 600;
       }
 
       .reserve-btn {
         display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 48px;
 
-        padding: 16px 40px;
+        padding: 18px 40px;
 
         color: white;
 
-        border: 1px solid rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 999px;
 
         transition: 0.4s ease;
 
@@ -137,9 +239,31 @@
         letter-spacing: 0.12em;
       }
 
+      .reserve-btn .arrow {
+        transition: 0.4s ease;
+      }
+
       .reserve-btn:hover {
         background: white;
         color: #111;
+      }
+
+      /* =========================
+  STORY RESERVE
+========================= */
+
+      .story-reserve {
+        text-align: center;
+        margin-top: 20px;
+
+        opacity: 0;
+        transform: translateY(40px);
+        transition: 1.2s ease;
+      }
+
+      .story-reserve.show {
+        opacity: 1;
+        transform: translateY(0);
       }
 
       /* =========================
@@ -151,21 +275,45 @@
 
         max-width: 900px;
         margin: auto;
+
+        text-align: center;
       }
 
       .story-content p {
         margin-bottom: 34px;
 
         font-size: clamp(1rem, 1.3vw, 1.12rem);
+      }
+
+      .story-line {
+        display: block;
 
         opacity: 0;
 
-        transform: translateY(40px);
+        transform: translateY(24px);
 
-        transition: 1.2s ease;
+        transition: 0.9s ease;
       }
 
-      .story-content p.show {
+      /* 段落内で1行ずつ時間差でフェードするように */
+
+      .story-line:nth-child(1) {
+        transition-delay: 0s;
+      }
+      .story-line:nth-child(2) {
+        transition-delay: 0.08s;
+      }
+      .story-line:nth-child(3) {
+        transition-delay: 0.16s;
+      }
+      .story-line:nth-child(4) {
+        transition-delay: 0.24s;
+      }
+      .story-line:nth-child(5) {
+        transition-delay: 0.32s;
+      }
+
+      .story-line.show {
         opacity: 1;
         transform: translateY(0);
       }
@@ -182,6 +330,89 @@
         font-weight: 300;
 
         margin-bottom: 80px;
+
+        opacity: 0;
+        transform: translateY(30px);
+
+        transition: 1.2s ease;
+      }
+
+      .section-title.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .menu-diagram {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 100%;
+        max-width: 900px;
+        margin: -20px auto 80px;
+      }
+
+      .menu-diagram-item {
+        position: relative;
+        z-index: 1;
+
+        width: 34%;
+        aspect-ratio: 1 / 1;
+
+        object-fit: contain;
+
+        opacity: 0;
+        transform: translateY(40px);
+        transition: 1.2s ease;
+      }
+
+      .menu-diagram-item.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* 1枚ずつ順番に表示されるように時間差をつける */
+
+      .menu-diagram-item:nth-child(1) {
+        transition-delay: 0s;
+      }
+      .menu-diagram-item:nth-child(2) {
+        transition-delay: 0.25s;
+      }
+      .menu-diagram-item:nth-child(3) {
+        transition-delay: 0.5s;
+      }
+
+      .menu-diagram-item:nth-child(2) {
+        z-index: 2;
+        margin-left: -3.4%;
+        margin-right: -3.4%;
+      }
+
+      .menu-diagram-item:nth-child(3) {
+        margin-left: -0.34%;
+      }
+
+      @media (max-width: 900px) {
+        .menu-diagram {
+          flex-direction: column;
+        }
+
+        .menu-diagram-item {
+          width: 70%;
+        }
+
+        .menu-diagram-item:nth-child(2) {
+          margin-left: 0;
+          margin-right: 0;
+          margin-top: -7%;
+          margin-bottom: -7%;
+        }
+
+        .menu-diagram-item:nth-child(3) {
+          margin-left: 0;
+          margin-top: 2%;
+        }
       }
 
       /* =========================
@@ -295,8 +526,8 @@
         transform: translateY(0);
       }
 
-      .reserve-banner h2 {
-        font-size: clamp(2rem, 5vw, 4rem);
+      .reserve-banner h3 {
+        font-size: 32px;
 
         font-weight: 300;
 
@@ -306,6 +537,23 @@
       .reserve-banner p {
         margin-bottom: 30px;
         opacity: 0.85;
+      }
+
+      .reserve-cards {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 24px;
+
+        margin-bottom: 40px;
+      }
+
+      .reserve-card {
+        width: 420px;
+        height: 240px;
+
+        background: #4a4a4a;
+        border-radius: 16px;
       }
 
       /* =========================
@@ -325,6 +573,11 @@
         .story-content {
           padding: 50px 28px;
         }
+
+        .reserve-card {
+          width: 100%;
+          max-width: 420px;
+        }
       }
     </style>
   </head>
@@ -338,166 +591,171 @@
       <div
         class="bg active"
         data-bg="hero"
-        style="background-image: url('suikei1.jpg');"
+        style="background-image: url(&quot;suikei1-optimized.jpg&quot;)"
       ></div>
 
       <div
         class="bg"
         data-bg="story"
-        style="background-image: url('suikei2.jpg');"
+        style="background-image: url(&quot;suikei2-optimized.jpg&quot;)"
       ></div>
 
       <div
         class="bg"
         data-bg="service"
-        style="background-image: url('suikei3.jpg');"
+        style="background-image: url(&quot;suikei3-optimized.jpg&quot;)"
+      ></div>
+
+      <div
+        class="bg"
+        data-bg="price"
+        style="background-image: url(&quot;09-optimized.jpg&quot;)"
       ></div>
 
       <div
         class="bg"
         data-bg="reserve"
-        style="background-image: url('suikei4.jpg');"
+        style="background-image: url(&quot;suikei4-optimized.jpg&quot;)"
       ></div>
     </div>
 
     <!-- =========================
-  HERO
+  SPACER TOP
 ========================= -->
 
-    <section data-section="hero">
-      <div class="hero-inner">
-        <h1>Relaxation</h1>
-
-        <a href="#" class="reserve-btn"> 予約する </a>
-      </div>
-    </section>
+    <section class="spacer"></section>
 
     <!-- =========================
-  STORY
+  HERO + STORY
+  見出しはこの範囲の間、画面上部にsticky固定される
 ========================= -->
 
-    <section data-section="story">
-      <div class="container">
-        <div class="story-content glass">
-          <p class="fade">
-            気づかないうちに、 心も身体も力が入っているあなたへ。
-          </p>
+    <div class="hero-story-wrap">
+      <div class="hero-inner">
+        <h2>Relaxation<span class="menu-suffix"> Menu</span></h2>
 
-          <p class="fade">
-            「最近、深く息ができていないな」 「寝ても疲れが残っている気がする」
-          </p>
-
-          <p class="fade">
-            そんなふうに感じたら、 少し休息が必要な時かもしれません。
-          </p>
-
-          <p class="fade">
-            今週末は、都会の喧騒を離れ、 森の静けさに身を委ねてみませんか？
-          </p>
-
-          <p class="fade">
-            木々のざわめき、 澄んだ空気、 木漏れ日の優しさ。
-            豊かな自然に包まれるうち、 張り詰めていた心と身体が、
-            ゆっくりとほどけていきます。
-          </p>
-
-          <p class="fade">
-            呼吸を深める「森林浴」。 身体をやさしくほぐしていく「ボディケア」。
-            そして、心地よく身体を温める「陶板浴」。
-          </p>
-
-          <p class="fade">
-            Render fikaだからこそ味わえる、 心と身体をリセットするための
-            リラクゼーション。
-          </p>
-
-          <p class="fade">
-            自然の力に包まれながら、 深く、ととのう時間を お過ごしください。
-          </p>
+        <div class="hero-badge">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M12 3 L21 19 H3 Z" fill="#3f4a34" />
+            <rect x="10.6" y="14" width="2.8" height="5" fill="#3f4a34" />
+          </svg>
+          <span>リラクゼーション・陶板浴</span>
+          <span class="badge-mark">T</span>
         </div>
       </div>
-    </section>
 
-    <!-- =========================
+      <section data-section="hero" class="hero-bg-trigger"></section>
+
+      <section data-section="story">
+        <div class="container">
+          <div class="story-content glass">
+            <p>
+              <span class="story-line fade">気づかないうちに、</span>
+              <span class="story-line fade"
+                >心も身体も力が入っているあなたへ。</span
+              >
+            </p>
+
+            <p>
+              <span class="story-line fade"
+                >森林に包まれながら深く呼吸し、</span
+              >
+              <span class="story-line fade">心と身体をゆっくり整えていく</span>
+              <span class="story-line fade"
+                >「森林浴 × ボディケア × 陶板浴」</span
+              >
+              <span class="story-line fade"
+                >のグランピング・リラクゼーション。</span
+              >
+            </p>
+
+            <p>
+              <span class="story-line fade">木々の揺れる音に耳を澄ませ、</span>
+              <span class="story-line fade"
+                >澄んだ空気をゆっくり吸い込む。</span
+              >
+              <span class="story-line fade">自然の中で過ごすうちに、</span>
+              <span class="story-line fade"
+                >慌ただしかった気持ちも、張っていた力も、</span
+              >
+              <span class="story-line fade">少しずつやわらいでいきます。</span>
+            </p>
+
+            <p>
+              <span class="story-line fade"
+                >日々の慌ただしさから少し離れて、</span
+              >
+              <span class="story-line fade">自然に包まれながら、</span>
+              <span class="story-line fade"
+                >深くととのうひとときをお過ごしください。</span
+              >
+            </p>
+
+            <div class="story-reserve fade">
+              <a href="#" class="reserve-btn">
+                <span>ご予約</span>
+                <span class="arrow">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================
   SERVICE
 ========================= -->
 
-    <section data-section="service">
-      <div class="container">
-        <h2 class="section-title">Relaxation Menu</h2>
-
-        <!-- 3カラム -->
-
-        <div class="cards">
-          <div class="card glass fade">
-            <h3>温熱陶板浴</h3>
-
-            <ul>
-              <li>ボディケア</li>
-              <li>森林浴</li>
-            </ul>
-
-            <p>
-              陶板浴は、天然鉱石を使用した 陶板の上に横になり、
-              低温で身体をじんわりと温める温熱ケアです。
-            </p>
+      <section data-section="service">
+        <div class="container2">
+          <div class="menu-diagram">
+            <img
+              src="relax-1.png"
+              alt="森林浴"
+              class="menu-diagram-item fade"
+            />
+            <img
+              src="relax-2.png"
+              alt="ボディケア"
+              class="menu-diagram-item fade"
+            />
+            <img
+              src="relax-3.png"
+              alt="温熱陶板浴"
+              class="menu-diagram-item fade"
+            />
           </div>
 
-          <div class="card glass fade">
-            <h3>森林浴</h3>
+          <!-- 3カラム -->
 
-            <ul>
-              <li>自然リラクゼーション</li>
-              <li>深呼吸</li>
-            </ul>
+          <div class="container">
+            <div class="price-grid">
+              <div class="price-card glass fade">
+                <h4>おひとりで</h4>
 
-            <p>
-              森の香りと静けさに包まれながら、 自然の中で深く呼吸をし、
-              心と身体をやさしく整えていきます。
-            </p>
-          </div>
+                <div class="price">¥4,300 ~ /1名様利用</div>
 
-          <div class="card glass fade">
-            <h3>指圧整体</h3>
+                <p>
+                  陶板浴の上に横になったまま、
+                  温まりながら施術を受けていただけます。
+                </p>
+              </div>
 
-            <ul>
-              <li>呼吸ほぐし整体</li>
-              <li>首・肩 / 背中 / 腰</li>
-              <li>ふくらはぎ / 足裏 / ヘッド</li>
-            </ul>
+              <div class="price-card glass fade">
+                <h4>おふたりで</h4>
 
-            <p>
-              呼吸を活用したやさしい施術で、 身体の深部からゆるめ、
-              緊張をほどいていきます。
-            </p>
+                <div class="price">¥9,600 ~ /2名様料金</div>
+
+                <p>大切な人と一緒に、 自然に包まれる癒しの時間を。</p>
+              </div>
+            </div>
           </div>
         </div>
-
-        <!-- PRICE -->
-
-        <div class="price-grid">
-          <div class="price-card glass fade">
-            <h3>おひとりで</h3>
-
-            <div class="price">¥4,300 ~ /1名様利用</div>
-
-            <p>
-              陶板浴の上に横になったまま、
-              温まりながら施術を受けていただけます。
-            </p>
-          </div>
-
-          <div class="price-card glass fade">
-            <h3>おふたりで</h3>
-
-            <div class="price">¥9,600 ~ /2名様料金</div>
-
-            <p>大切な人と一緒に、 自然に包まれる癒しの時間を。</p>
-          </div>
-        </div>
-
-      </div>
-    </section>
+      </section>
+    </div>
 
     <!-- =========================
   RESERVE
@@ -506,14 +764,23 @@
     <section data-section="reserve">
       <div class="container">
         <div class="reserve-banner fade">
-          <h2>深く、呼吸する時間を。</h2>
+          <h3>詳細・ご予約はこちらから</h3>
 
-          <p>森に包まれるリラクゼーション体験を、 Render fikaで。</p>
+          <div class="reserve-cards">
+            <div class="reserve-card"></div>
+            <div class="reserve-card"></div>
+          </div>
 
           <a href="#" class="reserve-btn"> ご予約はこちら </a>
         </div>
       </div>
     </section>
+
+    <!-- =========================
+  SPACER BOTTOM
+========================= -->
+
+    <section class="spacer"></section>
 
     <script>
       /* =========================
@@ -535,6 +802,24 @@
         },
       );
 
+      // STORYの文章は少し早めに（画面下からまだ余裕がある位置で）表示する
+      const storyFadeObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("show");
+            }
+          });
+        },
+        {
+          rootMargin: "0px 0px 200px 0px",
+        },
+      );
+
+      document
+        .querySelectorAll(".story-content .story-line, .story-reserve")
+        .forEach((el) => storyFadeObserver.observe(el));
+
       fades.forEach((el) => {
         fadeObserver.observe(el);
       });
@@ -543,7 +828,7 @@
   BG Change
 ========================= */
 
-      const sections = document.querySelectorAll("section");
+      const sections = document.querySelectorAll("section[data-section]");
 
       const backgrounds = document.querySelectorAll(".bg");
 
@@ -572,6 +857,169 @@
       sections.forEach((section) => {
         bgObserver.observe(section);
       });
+
+      /* =========================
+  BG Parallax
+  各背景を、対応するセクションのスクロール進行度に
+  合わせて縦にずらし、パララックス効果をつける
+========================= */
+
+      const PARALLAX_RANGE = 80;
+
+      const bgParallaxPairs = Array.from(backgrounds)
+        .map((bg) => ({
+          bg,
+          section: document.querySelector(
+            `section[data-section="${bg.dataset.bg}"]`,
+          ),
+        }))
+        .filter((pair) => pair.section);
+
+      function updateBgParallax() {
+        bgParallaxPairs.forEach(({ bg, section }) => {
+          const rect = section.getBoundingClientRect();
+          const total = rect.height + window.innerHeight;
+
+          const progress = Math.min(
+            1,
+            Math.max(0, (window.innerHeight - rect.top) / total),
+          );
+
+          const offset = (progress - 0.5) * PARALLAX_RANGE;
+
+          bg.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
+        });
+      }
+
+      let parallaxTicking = false;
+
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (!parallaxTicking) {
+            requestAnimationFrame(() => {
+              updateBgParallax();
+              parallaxTicking = false;
+            });
+
+            parallaxTicking = true;
+          }
+        },
+        { passive: true },
+      );
+
+      window.addEventListener("resize", updateBgParallax);
+
+      updateBgParallax();
+
+      /* =========================
+  HERO PIN
+  見出しの固定位置はCSSのposition:stickyに任せる
+  （JSでtransformを毎フレーム書き換えるとスクロールと
+    1フレームずれてガクガクして見えるため）
+  JSが担当するのは以下の2つだけ：
+  ・Storyが終わりServiceに入ったら「Relaxation」に
+    「 Menu」を追加する（そのまま表示され続ける）
+  ・Serviceが終わったら見出し全体をその場でフェードアウトする
+========================= */
+
+      const heroInner = document.querySelector(".hero-inner");
+      const heroStoryWrap = document.querySelector(".hero-story-wrap");
+      const menuSuffix = document.querySelector(".menu-suffix");
+      const serviceSection = document.querySelector(
+        'section[data-section="service"]',
+      );
+
+      const PIN_TOP = 48;
+      const REVEAL_DISTANCE = 200;
+      const RELEASE_DISTANCE = 100;
+      const MENU_SUFFIX_WIDTH = 200;
+
+      // sticky解除ライン（見出しの固定が自然に外れる位置）と
+      // 完全に一致させることで、フェードし終わる前に
+      // 見出しがずれて見えないようにする
+      let unstickLine = 0;
+      let serviceDocTop = 0;
+      let wrapDocBottom = 0;
+
+      function measureHeroPin() {
+        unstickLine = PIN_TOP + heroInner.offsetHeight;
+        serviceDocTop =
+          serviceSection.getBoundingClientRect().top + window.scrollY;
+        wrapDocBottom =
+          heroStoryWrap.getBoundingClientRect().bottom + window.scrollY;
+      }
+
+      function updateHeroPin() {
+        // Storyの終わり〜Serviceの入り口で「Menu」を追加する
+        const serviceTop = serviceDocTop - window.scrollY;
+        const revealLine = PIN_TOP + heroInner.offsetHeight + 40;
+
+        const revealProgress = Math.min(
+          1,
+          Math.max(0, (revealLine - serviceTop) / REVEAL_DISTANCE),
+        );
+
+        menuSuffix.style.maxWidth = `${revealProgress * MENU_SUFFIX_WIDTH}px`;
+        menuSuffix.style.opacity = String(revealProgress);
+        menuSuffix.style.filter = `blur(${((1 - revealProgress) * 12).toFixed(2)}px)`;
+
+        // Serviceが終わったら見出し全体をその場でフェードアウトする
+        const wrapBottom = wrapDocBottom - window.scrollY;
+
+        const fadeOutProgress = Math.min(
+          1,
+          Math.max(
+            0,
+            (unstickLine + RELEASE_DISTANCE - wrapBottom) / RELEASE_DISTANCE,
+          ),
+        );
+
+        heroInner.style.opacity = String(1 - fadeOutProgress);
+      }
+
+      // Relaxationが最初に画面へ入ってきた時、ブラーから
+      // くっきり表示されるようにする
+      const heroRevealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            entry.target.classList.toggle("revealed", entry.isIntersecting);
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      heroRevealObserver.observe(heroInner);
+
+      let pinTicking = false;
+
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (!pinTicking) {
+            requestAnimationFrame(() => {
+              updateHeroPin();
+              pinTicking = false;
+            });
+
+            pinTicking = true;
+          }
+        },
+        { passive: true },
+      );
+
+      window.addEventListener("resize", () => {
+        measureHeroPin();
+        updateHeroPin();
+      });
+
+      window.addEventListener("load", () => {
+        measureHeroPin();
+        updateHeroPin();
+      });
+
+      measureHeroPin();
+      updateHeroPin();
     </script>
   </body>
 </html>
